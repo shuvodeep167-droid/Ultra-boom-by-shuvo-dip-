@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Access</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="noise"></div>
+<main class="panel login">
+  <h1>ACCESS</h1>
+  <p class="tag">authorization required</p>
+  <input id="cid" placeholder="Client ID"/>
+  <input id="pass" type="password" placeholder="Password"/>
+  <button onclick="login()">LOGIN</button>
+  <div class="terminal" id="msg"></div>
+</main>
+
+<audio id="beep">
+  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=">
+</audio>
+
+<script>
+function beep(){ const b=document.getElementById("beep"); if(b){ b.currentTime=0; b.play().catch(()=>{});} }
+async function login(){
+  const id = cid.value, passw = pass.value;
+  const r = await fetch(`/api/login?id=${id}&pass=${passw}`);
+  const d = await r.json();
+  if(d.ok){
+    beep();
+    localStorage.setItem("exp", d.expires);
+    setTimeout(()=>location.href="index.html",300);
+  }else{
+    msg.textContent="Access denied";
+  }
+}
+</script>
+</body>
+</html>
